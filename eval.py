@@ -16,6 +16,17 @@ def eval(input_file, output_dir):
     accurate = (predictions["Survived"] == ground_truth["Survived"]).cumsum().tolist()
     accuracy = accurate[-1] * 100 / len(predictions)
 
+    metrics = {
+        "sort": "accuracy-score",
+        "metrics": [
+            {
+                "name": "accuracy-score",  # The name of the metric. Visualized as the column name in the runs table.
+                "numberValue": accuracy,  # The value of the metric. Must be a numeric value.
+                "format": "PERCENTAGE",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+            }
+        ],
+    }
+
     metrics = {"metrics": {"accuracy": accuracy}, "rank_metric": "accuracy"}
     with open(output_dir + "/metrics.json", "w") as f:
         json.dump(metrics, f)
