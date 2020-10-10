@@ -17,14 +17,14 @@ def titanic_pipline(token):
         file_outputs={"output": "/tmp/prediction.csv"},
     )
     predictions = kfp.dsl.InputArgumentPath(predict_op.outputs["output"])
-    eval_op = kfp.dsl.ContainerOp(
-        "eval",
+    submit_op = kfp.dsl.ContainerOp(
+        "submit",
         image="ocdr/d3project_eval",
-        command=["python", "eval.py", "-t", token, predictions],
+        command=["python", "submit.py", "-t", token, predictions],
         file_outputs={"mlpipeline-ui-metadata": "/metadata.json"},
     )
     env_var = V1EnvVar(name="DKUBE_PROJECT_ID", value="p123")
-    eval_op.add_env_variable(env_var)
+    submit_op.add_env_variable(env_var)
 
 
 token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLGRhdGEtZW5naW5lZXIsY2F0YWxvZy1hZG1pbixkYXRhLWFuYWx5c3Qsb3BlcmF0b3IiLCJleHAiOjQ4NDIzMjgwMjQsImlhdCI6MTYwMjMyODAyNCwiaXNzIjoiREt1YmUifQ.DzZYBg5xCYTIrtcwpdFIfRNzX5jPJoCAbY4t8hW-x24tNcpkO2geyjYzbcGwOhl10it3fw8htoIHJAkUvQMNZ1TYqs7WfDMXLSewLuLHhNzTPZYI5gU6It6ei7PGO2QtSlneaCtEYjLHNr6mbRNe218YUsdNBuHCy8iIbN17tXKA4MhN-m_zjR8T_clSBAtxhYaSO2sdjtQija7TzP8mzFmlRKZxslwmhecjZ_j3b-roMKcTNVyHauClFyJ9ld6V-9_bRE8jzVPaogXulrotNK42hVdtbI78thuHJWBse7XAqbyVNKJoM6kQti5N8ECBJDEdK_La2TEOP3oSODaYVg"
