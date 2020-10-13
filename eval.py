@@ -16,7 +16,7 @@ def eval(input_file, output_dir):
     accurate = (predictions["Survived"] == ground_truth["Survived"]).cumsum().tolist()
     accuracy = accurate[-1] * 100 / len(predictions)
 
-    metrics = {"metrics": {"accuracy": accuracy}, "sort": "accuracy"}
+    metrics = {"metrics": [{"accuracy": accuracy}], "sort": "accuracy"}
     with open(output_dir + "/metrics.json", "w") as f:
         json.dump(metrics, f)
     print(f"Accuracy: {round(accuracy,2)}")

@@ -20,7 +20,14 @@ def titanic_pipline(token):
     submit_op = kfp.dsl.ContainerOp(
         "submit",
         image="ocdr/d3project_eval",
-        command=["python", "submit.py", "-t", token, predictions],
+        command=[
+            "python",
+            "submit.py",
+            kfp.dsl.RUN_ID_PLACEHOLDER,
+            "-t",
+            token,
+            predictions,
+        ],
         file_outputs={"mlpipeline-ui-metadata": "/metadata.json"},
     )
     env_var = V1EnvVar(name="DKUBE_PROJECT_ID", value="p123")
