@@ -30,7 +30,7 @@ def titanic_pipline(token, project_id):
         ],
         file_outputs={
             "mlpipeline-ui-metadata": "/metadata.json",
-            "results": "/results.zip",
+            "results": "/results",
         },
     )
     env_var = V1EnvVar(name="DKUBE_PROJECT_ID", value=project_id)
