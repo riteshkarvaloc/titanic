@@ -1,5 +1,6 @@
+import os
+
 import click
-import requests
 
 import numpy as np
 import pandas as pd
@@ -7,14 +8,9 @@ import pandas as pd
 
 @click.command()
 def predict():
-    test_data_url = (
-        "https://raw.githubusercontent.com/deepio-oc/titanic/master/test/test.csv"
-    )
-    r = requests.get(test_data_url)
-    with open("/tmp/test.csv", "wb") as f:
-        f.write(r.content)
+    os.system("ls -l /titanic-test/")
 
-    df = pd.read_csv("/tmp/test.csv")
+    df = pd.read_csv("/titanic-test/test.csv")
     predictions = np.random.choice([0, 1], size=(len(df),), p=[1.0 / 3, 2.0 / 3])
     df["Survived"] = predictions
     df = df.set_index("PassengerId")

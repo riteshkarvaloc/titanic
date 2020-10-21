@@ -1,3 +1,5 @@
+import json
+
 import kfp
 from kubernetes.client.models import V1EnvVar
 
@@ -10,12 +12,36 @@ def titanic_pipline(token, project_id):
     pipelineConfig = kfp.dsl.PipelineConf()
     pipelineConfig.set_image_pull_policy("Always")
 
+    input_volumes = json.dumps(
+        ["titanic-test-pvc@dataset://titanic-test/1603048660622"]
+    )
+    storage_op = kfp.dsl.ContainerOp(
+        "get_dataset",
+        image="ocdr/dkubepl:storage_v1",
+        command=[
+            "dkubepl",
+            "storage",
+            "--token",
+            token,
+            "--namespace",
+            "kubeflow",
+            "--input_volumes",
+            input_volumes,
+            "--runid",
+            "{{pod.name}}",
+            "--wfid",
+            "{{workflow.uid}}",
+        ],
+    )
+
     predict_op = kfp.dsl.ContainerOp(
         "predict",
         image="ocdr/titanic_submission",
         command=["python", "predict.py"],
+        pvolumes={"/titanic-test/": kfp.dsl.PipelineVolume(pvc="titanic-test-pvc")},
         file_outputs={"output": "/tmp/prediction.csv"},
     )
+    predict_op.after(storage_op)
     predictions = kfp.dsl.InputArgumentPath(predict_op.outputs["output"])
     submit_op = kfp.dsl.ContainerOp(
         "submit",
@@ -38,7 +64,7 @@ def titanic_pipline(token, project_id):
 
 
 if __name__ == "__main__":
-    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLGRhdGEtZW5naW5lZXIsY2F0YWxvZy1hZG1pbixkYXRhLWFuYWx5c3Qsb3BlcmF0b3IiLCJleHAiOjQ4NDIzMjgwMjQsImlhdCI6MTYwMjMyODAyNCwiaXNzIjoiREt1YmUifQ.DzZYBg5xCYTIrtcwpdFIfRNzX5jPJoCAbY4t8hW-x24tNcpkO2geyjYzbcGwOhl10it3fw8htoIHJAkUvQMNZ1TYqs7WfDMXLSewLuLHhNzTPZYI5gU6It6ei7PGO2QtSlneaCtEYjLHNr6mbRNe218YUsdNBuHCy8iIbN17tXKA4MhN-m_zjR8T_clSBAtxhYaSO2sdjtQija7TzP8mzFmlRKZxslwmhecjZ_j3b-roMKcTNVyHauClFyJ9ld6V-9_bRE8jzVPaogXulrotNK42hVdtbI78thuHJWBse7XAqbyVNKJoM6kQti5N8ECBJDEdK_La2TEOP3oSODaYVg"
+    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQyODUzNzk0LCJpYXQiOjE2MDI4NTM3OTQsImlzcyI6IkRLdWJlIn0.3LFnWC1fI2vUVn2EHIaodC_BJxv2G19PbdyLVx8Vzid5CI_9F_UnAjX9N3P1cgO-npf4FnQqYM3hMGyRh1JCnNA2Ag2rXx4g5Da4ecdsndhZjXwtuEulXAGJO2FGe_L5zCciWEzOZB9JUW1xdOyLOZOUAT71TxBnX7rVRvQHyuTY3SF1Fs7na5z82ggMgFC2BI1vhc2XCwV9u6ftqww3rogdPMLri7mbtyQIQ9Ip-NrOOcjXyFD5Uow7-PevnkxLSOICAh7QvvI7WHxJxa6xDHuokPaX-q8qk1tHm4-hbFUcyIa8WeUB-DDxyWgczQmQ_s70q4cJt2vwPbRAfoyWqw"
     kfp.Client().create_run_from_pipeline_func(
-        titanic_pipline, arguments={"token": token, "project_id": "p123"}
+        titanic_pipline, arguments={"token": token, "project_id": "ucpu3w"}
     )
