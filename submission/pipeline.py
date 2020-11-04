@@ -19,8 +19,8 @@ class ContainerOp(kfp.dsl.ContainerOp):
 def titanic_pipline(token, project_id, dataset, version):
     pipelineConfig = kfp.dsl.PipelineConf()
     pipelineConfig.set_image_pull_policy("Always")
-
-    input_volumes = json.dumps([f"{dataset}-pvc@dataset://{dataset}/{version}"])
+    
+    input_volumes = json.dumps([f"titanic-test-pvc@dataset://{dataset}/{version}"])
     storage_op = ContainerOp(
         name="get_dataset",
         image="ocdr/dkubepl:storage_v1",
@@ -40,7 +40,7 @@ def titanic_pipline(token, project_id, dataset, version):
         name="predict",
         image="ocdr/titanic_submission",
         command=["python", "predict.py"],
-        pvolumes={"/titanic-test/": kfp.dsl.PipelineVolume(pvc=f"{dataset}-pvc")},
+        pvolumes={"/titanic-test/": kfp.dsl.PipelineVolume(pvc="titanic-test-pvc")},
         file_outputs={"output": "/tmp/prediction.csv"},
     )
     predict_op.after(storage_op)
