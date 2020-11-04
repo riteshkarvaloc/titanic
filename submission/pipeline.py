@@ -23,7 +23,7 @@ def titanic_pipline(token, project_id, dataset, version):
     input_volumes = json.dumps([f"titanic-test-pvc@dataset://{dataset}/{version}"])
     storage_op = ContainerOp(
         name="get_dataset",
-        image="ocdr/dkubepl:storage_v1",
+        image="ocdr/dkubepl:storage_v2",
         command=[
             "dkubepl",
             "storage",
@@ -67,11 +67,11 @@ def titanic_pipline(token, project_id, dataset, version):
 
 
 if __name__ == "__main__":
-    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQzODk2MjM4LCJpYXQiOjE2MDM4OTYyMzgsImlzcyI6IkRLdWJlIn0.EPBlkIdrPalYet0jN1Nvnzi7mMmf0-Nqi693Z0u45dkv3HHBHX1DWFO4-4XOWmx5cMogPg3LReglKSI88Rbacb2XdNYrYJVefbIhj_HTJu_tdWDABJ0gciWzNPByHVMpwj3fMQ8lpZrP5m3ZY5MGG-PkwIuz2ZSq0ncDYhNvxxjldWrdEBtHL78Eh5ts17ktqpmwIYytBcAwJvXsIj85Zy21hvGPCS0RXVZHNXDpg0OhZ_ifHC-etOgag1vQV_QfRA8iRhKMPzJmsAl2T9uwBPhKgLWwnEEcWOwiKRYZxajDP03jzBrnv6r318skdkLikb_--LuWoJIWRuDf430FAQ"
+    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQ0NDA1NDUyLCJpYXQiOjE2MDQ0MDU0NTIsImlzcyI6IkRLdWJlIn0.JovI7NHWRZTa3mYFduxF88cRk6AOzduFruvInWO5bpEJHn1N7s0-GUuIEGDwExiKH98q9NIFlYwSfeGbEH8Mw89EPkRTiGW6Wx_x9ju44lQ6VJJWXEYjJtJ97s3c9tN8nNGFTX1LIoVDQ2-0_qRTgd6YVcDX6b6qQ4J_x5_M9KpHcyBvxaIZxDVjEFDNwBJN15Y-hlehsQAYXoO-xNVMioAOAee7pka3htpxnof0pDG_9R5vYFiSaw_u84GgKMBN2SpeEU7tEYyOCXqXrgQVBO9i8QlsozE44o09WDiURg4h_3t7nGQYaZr5HwIfK83xbowPDKDXTxSfMJGAhp6tWQ"
     args = {
         "token": token,
-        "project_id": "fe7i48",
-        "dataset": "titanic-dataset",
-        "version": "1603979982241",
+        "project_id": "eairm4",
+        "dataset": "oc:titanic-test",
+        "version": "1604490031795",
     }
     kfp.Client().create_run_from_pipeline_func(titanic_pipline, arguments=args)
