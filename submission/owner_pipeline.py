@@ -13,14 +13,14 @@ class ContainerOp(kfp.dsl.ContainerOp):
         self.add_pod_label(name="wfid", value="{{workflow.uid}}")
 
 @kfp.dsl.pipeline(
-    name="Titanic Experiment pipeline",
+    name="Titanic Experiment pipeline (Owner)",
     description="A pipline showing how to use evaluation component",
 )
-def titanic_pipline(token, project_id, dataset, version):
+def titanic_pipline(token, project_id, dataset, version, claimname="titanic-test-pvc"):
     pipelineConfig = kfp.dsl.PipelineConf()
     pipelineConfig.set_image_pull_policy("Always")
     
-    input_volumes = json.dumps([f"titanic-test-pvc@dataset://{dataset}/{version}"])
+    input_volumes = json.dumps([f"{claimname}@dataset://{dataset}/{version}"])
     storage_op = ContainerOp(
         name="get_dataset",
         image="ocdr/dkubepl:storage_v2",
@@ -40,7 +40,7 @@ def titanic_pipline(token, project_id, dataset, version):
         name="predict",
         image="ocdr/titanic_submission",
         command=["python", "predict.py"],
-        pvolumes={"/titanic-test/": kfp.dsl.PipelineVolume(pvc="titanic-test-pvc")},
+        pvolumes={"/titanic-test/": kfp.dsl.PipelineVolume(pvc=claimname)},
         file_outputs={"output": "/tmp/prediction.csv"},
     )
     predict_op.after(storage_op)
@@ -67,11 +67,12 @@ def titanic_pipline(token, project_id, dataset, version):
 
 
 if __name__ == "__main__":
-    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQ0NDA1NDUyLCJpYXQiOjE2MDQ0MDU0NTIsImlzcyI6IkRLdWJlIn0.JovI7NHWRZTa3mYFduxF88cRk6AOzduFruvInWO5bpEJHn1N7s0-GUuIEGDwExiKH98q9NIFlYwSfeGbEH8Mw89EPkRTiGW6Wx_x9ju44lQ6VJJWXEYjJtJ97s3c9tN8nNGFTX1LIoVDQ2-0_qRTgd6YVcDX6b6qQ4J_x5_M9KpHcyBvxaIZxDVjEFDNwBJN15Y-hlehsQAYXoO-xNVMioAOAee7pka3htpxnof0pDG_9R5vYFiSaw_u84GgKMBN2SpeEU7tEYyOCXqXrgQVBO9i8QlsozE44o09WDiURg4h_3t7nGQYaZr5HwIfK83xbowPDKDXTxSfMJGAhp6tWQ"
+    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQ0NTIzOTc3LCJpYXQiOjE2MDQ1MjM5NzcsImlzcyI6IkRLdWJlIn0.j-9ZJMuD9DKSU-JE-MyBVPxPqNu4jW-4_KZYS6kHoNw2ju0qvot6oqQ6aD6aQd2gQHFH3Zf-deNt-PPzKlG1vex0cnb5qPeew_dJa7JCwt9YSrXcpajhE_-GDwVrlJpauBfo_sardhrqwvp--mEh8i0wWDZeP8mW11pUdv2IctcxZks7MI7C2ocooZ90yZzcOlmeK6YHqSLa6uyjGFlaA5fj2HuE4A3EE8bxJbnRUujuRs5skhrY-BnU00DrlLNQqGzNuxmk1J9EOnCZz8GqPnvIBJFdHsGVMAY1jOh1BEePX4ONv8ETQoTsIfK8CJ3aM1rkAlGNsq8v9B454IWuqQ"
     args = {
         "token": token,
-        "project_id": "eairm4",
+        "project_id": "up88n1",
         "dataset": "oc:titanic-test",
-        "version": "1604490031795",
+        "version": "1604525752527",
+        "claimname": "titanic-test-pvc"
     }
     kfp.Client().create_run_from_pipeline_func(titanic_pipline, arguments=args)
