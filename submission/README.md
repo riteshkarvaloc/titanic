@@ -1,6 +1,6 @@
 # How to build a kubeflow pipeline to submit prdictions
 
-This repo has example pipeline for [owner](owner_pipeline.py) and [User](user_pipeline.py) here. For building your own pipeline, you can follow these steps:
+This repo has example pipeline for [Project Owner](owner_pipeline.py) and [Data-scientist](user_pipeline.py) here. For building your own pipeline, you can follow these steps:
 
 1. In your pipeline file, define a ContainerOp function as below: 
 
@@ -35,9 +35,9 @@ class ContainerOp(kfp.dsl.ContainerOp):
         ],
     )
 ```
-`dataset   - name of the dataset which owner wants to make it available to other users.`
-`version   - numerical version of the dataset (of form 1604525752527) (Note: v1,v2 version names will be supported later)`
-`claimname - A name which can be shared with other users to access this dataset. Name can only contain [a-zA-Z0-9-] and cannot begin with a hypen and numeric.`
+* dataset   - name of the dataset which owner wants to make it available to other users.
+* version   - numerical version of the dataset (of form 1604525752527) (Note: v1,v2 version names will be supported later)
+* claimname - A name which can be shared with other users to access this dataset. Name can only contain [a-zA-Z0-9-] and cannot begin with a hypen and numeric.
 
 4. Access the dataset in any of kubeflow component by providing the pvolumes argument. Example
 
