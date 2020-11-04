@@ -1,5 +1,7 @@
 # How to build a kubeflow pipeline to submit prdictions
 
+This repo has example pipeline for [owner](owner_pipeline.py) and [User](user_pipeline.py) here. For building your own pipeline, you can follow these steps:
+
 1. In your pipeline file, define a ContainerOp function as below: 
 
 ```
@@ -12,7 +14,9 @@ class ContainerOp(kfp.dsl.ContainerOp):
         self.add_pod_label(name="wfid", value="{{workflow.uid}}")
 ```
 
-2. Project owner needs to first run a pipeline which exports Test dataset as PVC. This allows other users to access the dataset in their pipelines. This step is not required for non-owner of the dataset.  To export the dataset add following component in the pipeline:
+2. Add two pipeline parameters `token` and `project_id`. These will get autopopulated while creating RUN in kubeflow pipeline UI.
+
+3. Project owner needs to first run a pipeline which exports Test dataset as PVC. This allows other users to access the dataset in their pipelines. This step is not required for non-owner of the dataset.  To export the dataset add following component in the pipeline:
 
 ```
     input_volumes = json.dumps([f"{claimname}@dataset://{dataset}/{version}"])
@@ -31,11 +35,11 @@ class ContainerOp(kfp.dsl.ContainerOp):
         ],
     )
 ```
-dataset - name of the dataset which owner wants to make it available to other users.
-version - numerical version of the dataset (of form 1604525752527) (Note: v1,v2 version names will be supported later)
-claimname- A name which can be shared with other users to access this dataset. Name can only contain [a-zA-Z0-9-] and cannot begin with a hypen and numeric.
+`dataset   - name of the dataset which owner wants to make it available to other users.`
+`version   - numerical version of the dataset (of form 1604525752527) (Note: v1,v2 version names will be supported later)`
+`claimname - A name which can be shared with other users to access this dataset. Name can only contain [a-zA-Z0-9-] and cannot begin with a hypen and numeric.`
 
-3. Access the dataset in any of kubeflow component by providing the pvolumes argument. Example
+4. Access the dataset in any of kubeflow component by providing the pvolumes argument. Example
 
 ```
     predict_op = ContainerOp(
@@ -47,7 +51,7 @@ claimname- A name which can be shared with other users to access this dataset. N
     )
 ```
 
-4. Submit the prediction from a pipeline component's output to leaderboard using following component:
+5. Submit the prediction from a pipeline component's output to leaderboard using following component:
 
 ```
     predictions = kfp.dsl.InputArgumentPath(predict_op.outputs["output"])
@@ -67,5 +71,3 @@ claimname- A name which can be shared with other users to access this dataset. N
         },
     )
 ```
-
-Example pipeline code: [owner](owner_pipeline.py) [User](user_pipeline.zip)
