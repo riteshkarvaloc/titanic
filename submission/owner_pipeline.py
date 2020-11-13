@@ -16,14 +16,14 @@ class ContainerOp(kfp.dsl.ContainerOp):
     name="Titanic Experiment pipeline (Owner)",
     description="A pipline showing how to use evaluation component",
 )
-def titanic_pipline(token, project_id, dataset, version, claimname="titanic-test-pvc"):
+def titanic_pipline(token, project_id, dataset, version='v1', claimname="titanic-test-pvc"):
     pipelineConfig = kfp.dsl.PipelineConf()
     pipelineConfig.set_image_pull_policy("Always")
     
     input_volumes = json.dumps([f"{claimname}@dataset://{dataset}/{version}"])
     storage_op = ContainerOp(
         name="get_dataset",
-        image="ocdr/dkubepl:storage_v2",
+        image="ocdr/dkubepl:storage_v3",
         command=[
             "dkubepl",
             "storage",
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         "token": token,
         "project_id": "up88n1",
         "dataset": "oc:titanic-test",
-        "version": "1604525752527",
+        "version": "v1",
         "claimname": "titanic-test-pvc"
     }
     kfp.Client().create_run_from_pipeline_func(titanic_pipline, arguments=args)

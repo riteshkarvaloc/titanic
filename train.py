@@ -1,6 +1,7 @@
 import re
 
 import matplotlib.pyplot as plt
+import mlflow.keras
 import numpy as np
 import pandas as pd
 from keras import backend as K
@@ -11,6 +12,7 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
+mlflow.keras.autolog()
 # PassengerId -- A numerical id assigned to each passenger.
 # Survived -- Whether the passenger survived (1), or didn't (0). We'll be making predictions for this column.
 # Pclass -- The class the passenger was in -- first class (1), second class (2), or third class (3).
