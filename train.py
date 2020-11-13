@@ -182,14 +182,14 @@ plt.bar(range(len(predictors)), scores)
 plt.xticks(range(len(predictors)), predictors, rotation='vertical')
 plt.show()
 
-X = pre_train[predictors].as_matrix()
+X = pre_train[predictors].to_numpy()
 Y = np_utils.to_categorical(pre_train['Survived'])
 Y = Y[:, 1]
 
 kfold = StratifiedKFold(n_splits=5,  shuffle=True, random_state=seed).split(X, Y)
 cv = []
 i = len(predictors)
-index = test["PassengerId"].as_matrix()
+index = test["PassengerId"].to_numpy()
 
 def load_model_and_fit(train_x, train_y):
     model = Sequential()
@@ -201,7 +201,7 @@ def load_model_and_fit(train_x, train_y):
     model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    model.fit(train_x, train_y, nb_epoch=600, batch_size=32, verbose=0)
+    model.fit(train_x, train_y, epochs=600, batch_size=32, verbose=0)
     return model
 
 # For testing
