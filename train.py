@@ -1,7 +1,8 @@
 import re
 
+import keras
 import matplotlib.pyplot as plt
-import mlflow.keras
+import mlflow
 import numpy as np
 import pandas as pd
 from keras import backend as K
@@ -12,7 +13,6 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
-mlflow.keras.autolog()
 # PassengerId -- A numerical id assigned to each passenger.
 # Survived -- Whether the passenger survived (1), or didn't (0). We'll be making predictions for this column.
 # Pclass -- The class the passenger was in -- first class (1), second class (2), or third class (3).
@@ -33,6 +33,11 @@ train = pd.read_csv("train/train.csv")
 test = pd.read_csv("test/test.csv")
 
 all_data = pd.concat([train, test])
+
+class LogMetric(keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        mlflow.log_metric("train_loss", logs["loss"])
+        mlflow.log_metric("train_acc", logs["accuracy"])
 
 
 class DataDigest:
@@ -203,7 +208,7 @@ def load_model_and_fit(train_x, train_y):
     model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    model.fit(train_x, train_y, epochs=600, batch_size=32, verbose=0)
+    model.fit(train_x, train_y, epochs=600, batch_size=32, verbose=0, callbacks=[LogMetric()])
     return model
 
 # For testing
