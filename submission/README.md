@@ -1,4 +1,4 @@
-# How to build a kubeflow pipeline to submit prdictions
+# How to build a kubeflow pipeline to submit predictions
 
 This repo has example pipeline for [Project Owner](owner_pipeline.py) and [Data-scientist](user_pipeline.py) here. For building your own pipeline, you can follow these steps:
 
