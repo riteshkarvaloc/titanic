@@ -7,6 +7,7 @@ from kubernetes.client.models import V1EnvVar
 class ContainerOp(kfp.dsl.ContainerOp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.add_pod_label(name="platform", value="Dkube")
         self.add_pod_label(name="dkube.garbagecollect", value="true")
         self.add_pod_label(name="dkube.garbagecollect.policy", value="all")
 
@@ -22,11 +23,13 @@ def titanic_pipline(token, project_id, claimname):
         name="train",
         image="ocdr/dkubepl:2.2.0.1",
         command=["dkubepl", "training", "--token", token, "--container", '{"image":"ocdr/dkube-datascience-tf-cpu:v2.0.0"}',
+                "--framework", "tensorflow", "--version", "2.0.0",
                 "--script", "python train.py", "--program","titanic",
                 "--outputs",'["titanic"]', "--output_mounts",'["/opt/dkube/output"]',
                 "--runid", '{{pod.name}}', "--wfid", '{{workflow.uid}}'
             ],
     )
+    train_op.add_pod_label(name="stage", value="training")
 
     predict_op = ContainerOp(
         name="predict",
