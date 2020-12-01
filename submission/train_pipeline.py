@@ -21,9 +21,9 @@ def titanic_pipline(token, project_id, claimname):
 
     train_op = ContainerOp(
         name="train",
-        image="ocdr/dkubepl:2.2.0.1",
+        image="ocdr/dkubepl:2.2.1.1",
         command=["dkubepl", "training", "--token", token, "--container", '{"image":"ocdr/dkube-datascience-tf-cpu:v2.0.0"}',
-                "--framework", "tensorflow", "--version", "2.0.0",
+                "--framework", "tensorflow", "--version", "2.0.0", "--tags", f'["project:{project_id}"]',
                 "--script", "python train.py", "--program","titanic",
                 "--outputs",'["titanic"]', "--output_mounts",'["/opt/dkube/output"]',
                 "--runid", '{{pod.name}}', "--wfid", '{{workflow.uid}}'
@@ -63,10 +63,10 @@ def titanic_pipline(token, project_id, claimname):
 
 
 if __name__ == "__main__":
-    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jIiwicm9sZSI6ImRhdGFzY2llbnRpc3QsbWxlLHBlLG9wZXJhdG9yIiwiZXhwIjo0ODQ0NTIzOTc3LCJpYXQiOjE2MDQ1MjM5NzcsImlzcyI6IkRLdWJlIn0.j-9ZJMuD9DKSU-JE-MyBVPxPqNu4jW-4_KZYS6kHoNw2ju0qvot6oqQ6aD6aQd2gQHFH3Zf-deNt-PPzKlG1vex0cnb5qPeew_dJa7JCwt9YSrXcpajhE_-GDwVrlJpauBfo_sardhrqwvp--mEh8i0wWDZeP8mW11pUdv2IctcxZks7MI7C2ocooZ90yZzcOlmeK6YHqSLa6uyjGFlaA5fj2HuE4A3EE8bxJbnRUujuRs5skhrY-BnU00DrlLNQqGzNuxmk1J9EOnCZz8GqPnvIBJFdHsGVMAY1jOh1BEePX4ONv8ETQoTsIfK8CJ3aM1rkAlGNsq8v9B454IWuqQ"
+    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jZGt1YmUiLCJyb2xlIjoiZGF0YXNjaWVudGlzdCxtbGUscGUsb3BlcmF0b3IiLCJleHAiOjQ4NDY0ODY1NjQsImlhdCI6MTYwNjQ4NjU2NCwiaXNzIjoiREt1YmUifQ.hCg_enrkSYPEXTxsAyhPUFfynaovXnUG3aLjwb5izNAup_69nQQcvalCWvEl2lZXY5DB9qUHYfEetrHM-95CPSepmMBkhj9JUmod4m8jB2hU1q6Ezi_DOuuzIm0_xQS1F6PSsTrOPZPNs7vSEYA0OJid9KfTCefgb7OeqxfEL0pklz2bXWctc6Il_aln1SAwu6KTd8o7Qx6GVsPgu97GxV-3KyBktEB4lOpuGzp41amQE3NBpnNZN7mqMyOmsdJajRd_iYjwO-ivzu3syMU4RCwxBy9YzLVBpkQuHGt1SKRVxSKre-dJQAvQmOPDkWF6daNUF67XKxvtdf1HpEf5sw"
     args = {
         "token": token,
-        "project_id": "up88n1",
+        "project_id": "szs1tg",
         "claimname" : "titanic-test-pvc"
     }
     kfp.Client().create_run_from_pipeline_func(titanic_pipline, arguments=args)
