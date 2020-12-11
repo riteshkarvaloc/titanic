@@ -1,14 +1,14 @@
 import re
 
-from tensorflow import keras
+import keras
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import pandas as pd
-from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.models import Sequential
-from tensorflow.utils import np_utils
+from keras import backend as K
+from keras.layers import Dense, Dropout
+from keras.models import Sequential
+from keras.utils import np_utils
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
@@ -149,14 +149,14 @@ data_digest.tickets = tickets_tst
 predictors = ["Pclass",
               "AgeF",
               "TitleF",
-              "TitleD_mr", "TitleD_mrs", "TitleD_miss", "TitleD_master", "TitleD_ms",
-              "TitleD_col", "TitleD_rev", "TitleD_dr",
+              "TitleD_mr", "TitleD_mrs", "TitleD_miss", "TitleD_master", 
+              "TitleD_col", 
               "CabinF",
               "DeckF",
               "DeckD_U",
               "DeckD_A",
               "DeckD_B", "DeckD_C", "DeckD_D", "DeckD_E", "DeckD_F",
-              "DeckD_G",
+            
               "FamilyF",
               "TicketF",
               "SexF",
@@ -210,7 +210,7 @@ def load_model_and_fit(train_x, train_y):
     model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    model.fit(train_x, train_y, epochs=600, batch_size=32, verbose=0, callbacks=[LogMetric()])
+    model.fit(train_x, train_y, epochs=60, batch_size=32, verbose=0, callbacks=[LogMetric()])
     return model
 
 # For testing
