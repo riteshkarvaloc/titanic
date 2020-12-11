@@ -1,14 +1,14 @@
 import re
 
-import keras
+from tensorflow import keras
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import pandas as pd
-from keras import backend as K
-from keras.layers import Dense, Dropout
-from keras.models import Sequential
-from keras.utils import np_utils
+from tensorflow.keras import backend as K
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.models import Sequential
+from tensorflow.utils import np_utils
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
