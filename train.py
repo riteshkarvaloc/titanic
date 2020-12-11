@@ -12,7 +12,7 @@ from keras.utils import np_utils
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
-
+from numpy.random import RandomState
 # PassengerId -- A numerical id assigned to each passenger.
 # Survived -- Whether the passenger survived (1), or didn't (0). We'll be making predictions for this column.
 # Pclass -- The class the passenger was in -- first class (1), second class (2), or third class (3).
@@ -29,10 +29,12 @@ from sklearn.preprocessing import StandardScaler
 seed = 42
 np.random.seed(seed)
 
-train = pd.read_csv("train/train.csv")
-test = pd.read_csv("test/test.csv")
+df = pd.read_csv("/titanic/train.csv")
+rng = RandomState()
+train = df.sample(frac=0.8, random_state=rng)
+test = df.loc[~df.index.isin(train.index)]
 
-all_data = pd.concat([train, test])
+all_data = df
 
 class LogMetric(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
@@ -219,6 +221,6 @@ for train, test in kfold:
     cv.append(scores[1] * 100)
 print("%.2f%% (+/- %.2f%%)" % (np.mean(cv), np.std(cv)))
 
-model.save("/opt/dkube/output/model.h5")
+model.save("/model/model.h5")
 
 #source: https://raw.githubusercontent.com/evg-dev/titanic-keras-nn/master/titanic.py
