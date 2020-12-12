@@ -8,7 +8,7 @@ from tensorflow import keras
 
 @click.command()
 def predict():
-
+    os.system("ls -l /dataset/ /model/")
     df = pd.read_csv("/dataset/test.csv")
     keras.models.load_model("/model/model.h5")
     
