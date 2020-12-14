@@ -29,12 +29,10 @@ from numpy.random import RandomState
 seed = 42
 np.random.seed(seed)
 
-df = pd.read_csv("/titanic/train.csv")
-rng = RandomState()
-train = df.sample(frac=0.8, random_state=rng)
-test = df.loc[~df.index.isin(train.index)]
+train = pd.read_csv("/titanic-train/train.csv")
+test = pd.read_csv("/titanic-test/test.csv")
 
-all_data = df
+all_data = pd.concat([train, test])
 
 class LogMetric(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
