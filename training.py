@@ -27,12 +27,12 @@ if __name__ == "__main__":
     # Read features
     data = featureset.read()  # output: response json with data
     feature_df = data["data"]
-
+    train, val = train_test_split(feature_df, test_size=0.2)
     ########--- Train ---########
 
     # preparing input output pairs
-    y = feature_df["Survived"].values
-    x = feature_df.drop("Survived", 1).values
+    y = train["Survived"].values
+    x = train.drop("Survived", 1).values
 
     # Training random forest classifier
     model_RFC = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
@@ -60,3 +60,4 @@ if __name__ == "__main__":
     data = featureset.read()  # output: response json with data
     test_df = data["data"]
     test_df.to_csv(os.path.join(out_path, "test.csv"))
+    val.to_csv(os.path.join(out_path, "val.csv"))
