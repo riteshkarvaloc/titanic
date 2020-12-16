@@ -59,5 +59,5 @@ if __name__ == "__main__":
     # Read features
     data = featureset.read()  # output: response json with data
     test_df = data["data"]
-    test_df.to_csv(os.path.join(out_path, "test.csv"))
-    val.to_csv(os.path.join(out_path, "val.csv"))
+    test_df.to_csv(os.path.join(out_path, "test.csv"), index=False)
+    val.to_csv(os.path.join(out_path, "val.csv"), index=False)
