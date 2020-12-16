@@ -22,13 +22,9 @@ if __name__ == "__main__":
     global FLAGS
     FLAGS, unparsed = parser.parse_known_args()
 
-    ########--- Get DKube client handle ---########
-
     dkubeURL = FLAGS.url
     # Dkube user access token for API authentication
     authToken = os.getenv("DKUBE_USER_ACCESS_TOKEN")
-    # Get client handle
-    api = DkubeApi(URL=dkubeURL, token=authToken)
 
     ########--- Extract and load data  ---########
 
@@ -65,6 +61,9 @@ if __name__ == "__main__":
     # Features
     k = 0
     for df in [train_df, test_df]:
+        ########--- Get DKube client handle ---########
+        # Get client handle
+        api = DkubeApi(URL=dkubeURL, token=authToken)
         # Prepare featurespec - Name, Description, Schema for each feature
         keys = df.keys()
         schema = df.dtypes.to_list()
