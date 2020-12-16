@@ -14,7 +14,7 @@ def predict():
     model = joblib.load(os.path.join(model_dir, "model.joblib"))
     predictions = model.predict(df)
     output = pd.DataFrame({'PassengerId': test_df.PassengerId, 'Survived': predictions})
-    output.to_csv('/tmp/prediction.csv ', index=False)
+    output.to_csv("/tmp/prediction.csv", index=False)
     print("predictions generated.")
 
 if __name__ == "__main__":
