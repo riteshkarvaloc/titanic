@@ -6,6 +6,7 @@ import argparse
 # import sys
 import yaml
 from dkube.sdk import *
+import time
 
 inp_path = ["/opt/dkube/input/train", "/opt/dkube/input/test"]
 out_path = ["/opt/dkube/output/train", "/opt/dkube/output/test"]
@@ -95,3 +96,4 @@ if __name__ == "__main__":
         resp = api.commit_features()
         print("featureset commit response:", resp)
         k =+1
+        time.sleep(20)
