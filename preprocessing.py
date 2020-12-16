@@ -53,9 +53,9 @@ if __name__ == "__main__":
     # Select features for training
     features = ["Pclass", "Sex", "SibSp", "Parch"]
     test_df = pd.get_dummies(test_data[features])
-    test_df = pd.concat([train_data[['Age', 'Fare']], test_df], axis=1)
+    test_df = pd.concat([test_data[['Age', 'Fare','PassengerId']], test_df], axis=1)
     train_df = pd.get_dummies(train_data[features])
-    train_df = pd.concat([train_data[["Age", "Fare", "Survived"]], train_df], axis=1)
+    train_df = pd.concat([train_data[["Age", "Fare", "Survived", "PassengerId"]], train_df], axis=1)
     print(train_df.head())
 
     ########--- Upload Featureset metadata ---########

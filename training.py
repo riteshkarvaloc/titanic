@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     # preparing input output pairs
     y = train["Survived"].values
-    x = train.drop("Survived", 1).values
+    x = train.drop(["PassengerId","Survived"], 1).values
 
     # Training random forest classifier
     model_RFC = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
