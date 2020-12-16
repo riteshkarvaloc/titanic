@@ -6,7 +6,6 @@ import argparse
 # import sys
 import yaml
 from dkube.sdk import *
-import time
 
 inp_path = ["/opt/dkube/input/train", "/opt/dkube/input/test"]
 out_path = ["/opt/dkube/output/train", "/opt/dkube/output/test"]
@@ -23,9 +22,13 @@ if __name__ == "__main__":
     global FLAGS
     FLAGS, unparsed = parser.parse_known_args()
 
+    ########--- Get DKube client handle ---########
+
     dkubeURL = FLAGS.url
     # Dkube user access token for API authentication
     authToken = os.getenv("DKUBE_USER_ACCESS_TOKEN")
+    # Get client handle
+    api = DkubeApi(URL=dkubeURL, token=authToken)
 
     ########--- Extract and load data  ---########
 
@@ -62,9 +65,6 @@ if __name__ == "__main__":
     # Features
     k = 0
     for df in [train_df, test_df]:
-        ########--- Get DKube client handle ---########
-        # Get client handle
-        api = DkubeApi(URL=dkubeURL, token=authToken)
         # Prepare featurespec - Name, Description, Schema for each feature
         keys = df.keys()
         schema = df.dtypes.to_list()
@@ -93,7 +93,6 @@ if __name__ == "__main__":
         # Write features - Dataframe
         featureset.write(df)
         # Commit featuresset
-        resp = api.commit_features()
-        print("featureset commit response:", resp)
         k =+1
-        time.sleep(20)
+    resp = api.commit_features()
+    print("featureset commit response:", resp)
