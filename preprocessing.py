@@ -92,7 +92,7 @@ if __name__ == "__main__":
         featureset.update_features_path(path=out_path[k])
         # Write features - Dataframe
         featureset.write(df)
-        # Commit featuresset
         k =+1
+    # Commit featuresset
     resp = api.commit_features()
     print("featureset commit response:", resp)
