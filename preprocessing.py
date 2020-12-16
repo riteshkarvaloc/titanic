@@ -47,8 +47,6 @@ if __name__ == "__main__":
 
     # Fill in null values
     train_data["Embarked"].fillna(method="ffill", inplace=True)
-
-    test_data = pd.read_csv("titanic/test.csv")
     test_data['Age'].fillna(value=test_data['Age'].median(), inplace=True)
     test_data['Fare'].fillna(test_data['Fare'].median() , inplace = True)
 
