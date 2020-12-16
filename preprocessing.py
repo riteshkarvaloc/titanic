@@ -7,6 +7,7 @@ import argparse
 import yaml
 from dkube.sdk import *
 
+inp_path = ["/opt/dkube/input/train", "/opt/dkube/input/test"]
 out_path = ["/opt/dkube/output/train", "/opt/dkube/output/test"]
 
 if __name__ == "__main__":
@@ -31,8 +32,8 @@ if __name__ == "__main__":
 
     ########--- Extract and load data  ---########
 
-    train_data = pd.read_csv("/titanic-train/train.csv")
-    test_data = pd.read_csv("/titanic-test/test.csv")
+    train_data = pd.read_csv("/opt/dkube/input/train/train.csv")
+    test_data = pd.read_csv("/opt/dkube/input/test/test.csv")
     print(train_data.describe())
 
     ########--- Process raw data  ---########
